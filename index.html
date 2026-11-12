@@ -7,92 +7,144 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            /* Orqa fon rasmi va qoraytirilgan estetik effekt */
+            background-image: linear-gradient(to bottom, rgba(24, 24, 27, 0.78), rgba(24, 24, 27, 0.92)), 
+                              url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
     </style>
 </head>
-<body class="bg-stone-50 text-stone-800 antialiased min-h-screen pb-32">
+<body class="text-white antialiased min-h-screen pb-36">
 
-    <!-- Estetik Sarlavha -->
-    <header class="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-40 px-4 py-3.5 flex justify-between items-center shadow-xs">
-        <div class="flex items-center gap-2">
-            <span class="text-2xl">☕</span>
-            <h1 class="font-bold text-lg tracking-tight text-stone-900">Aura Cafe</h1>
+    <!-- Estetik Sarlavha (Shaffof oyna effekti) -->
+    <header class="bg-zinc-900/70 backdrop-blur-md border-b border-white/10 sticky top-0 z-40 px-4 py-3.5 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-2.5">
+            <span class="text-2xl bg-amber-500/20 p-1.5 rounded-xl border border-amber-500/30">☕</span>
+            <div>
+                <h1 class="font-bold text-base tracking-tight text-white leading-none">Aura Cafe</h1>
+                <span class="text-[11px] text-zinc-400">Online Menyu & Xizmat</span>
+            </div>
         </div>
-        <div id="table-badge" class="bg-stone-200 text-stone-700 px-3 py-1 rounded-full text-xs font-semibold tracking-wide">
-            Stol: Hali tanlanmadi
-        </div>
+        <button onclick="openTableModal()" id="table-badge" class="bg-white/10 hover:bg-white/20 border border-white/15 text-amber-400 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition cursor-pointer">
+            📍 Stolni tanlash
+        </button>
     </header>
 
     <!-- Asosiy Kontent -->
     <main class="max-w-md mx-auto p-4 space-y-6">
         
         <!-- Toast Xabarnoma -->
-        <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4">
-            <div id="toast-bg" class="bg-stone-900 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-medium">
-                <span id="toast-icon">✨</span>
+        <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4 w-max max-w-[90%]">
+            <div id="toast-bg" class="bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-sm font-medium border border-white/15">
+                <span id="toast-icon">✅</span>
                 <span id="toast-text">Amaliyot bajarildi</span>
             </div>
         </div>
 
         <!-- Tezkor Harakatlar (Ofitsiant va Hisob) -->
-        <div class="grid grid-cols-2 gap-3 pt-2">
-            <button onclick="callService('🔔 Ofitsiantni chaqirish')" class="group bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-semibold py-3.5 px-4 rounded-2xl shadow-sm transition-all flex flex-col items-center justify-center gap-1">
-                <span class="text-xl group-hover:scale-110 transition-transform">🔔</span>
-                <span class="text-xs">Ofitsiant chaqirish</span>
+        <div class="grid grid-cols-2 gap-3 pt-1">
+            <button onclick="callService('🔔 Ofitsiantni chaqirish')" class="group bg-gradient-to-br from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 active:scale-95 text-white font-semibold py-3.5 px-4 rounded-2xl shadow-lg shadow-amber-500/20 transition-all flex flex-col items-center justify-center gap-1 border border-white/15">
+                <span class="text-2xl group-hover:scale-110 transition-transform">🔔</span>
+                <span class="text-xs tracking-wide">Ofitsiant chaqirish</span>
             </button>
-            <button onclick="callService('🧾 Hisobni so\'rash (Chek)')" class="group bg-stone-900 hover:bg-stone-800 active:scale-95 text-white font-semibold py-3.5 px-4 rounded-2xl shadow-sm transition-all flex flex-col items-center justify-center gap-1">
-                <span class="text-xl group-hover:scale-110 transition-transform">🧾</span>
-                <span class="text-xs">Hisobni so'rash</span>
+            <button onclick="callService('🧾 Hisobni so\'rash (Chek)')" class="group bg-white/10 hover:bg-white/15 backdrop-blur-md active:scale-95 text-white font-semibold py-3.5 px-4 rounded-2xl shadow-lg transition-all flex flex-col items-center justify-center gap-1 border border-white/15">
+                <span class="text-2xl group-hover:scale-110 transition-transform">🧾</span>
+                <span class="text-xs tracking-wide">Hisobni so'rash</span>
             </button>
         </div>
 
         <!-- Menyu Bo'limi -->
-        <div class="space-y-3">
-            <h2 class="text-base font-bold text-stone-900 tracking-tight px-1">🍽 Asosiy Menyu</h2>
-
-            <!-- Taom 1 -->
-            <div class="bg-white p-3.5 rounded-2xl border border-stone-200/80 shadow-xs flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold text-stone-800 text-sm">Osh (Milliy)</h3>
-                    <p class="text-amber-600 font-semibold text-xs">35 000 so'm</p>
-                </div>
-                <button onclick="addToCart('Osh (Milliy)', 35000)" class="bg-stone-100 hover:bg-amber-500 hover:text-white text-stone-800 font-bold w-9 h-9 rounded-xl flex items-center justify-center transition text-lg">+</button>
+        <div class="space-y-3.5">
+            <div class="flex justify-between items-center px-1">
+                <h2 class="text-base font-bold text-white tracking-tight">🍽 Asosiy Menyu</h2>
+                <span class="text-xs text-zinc-400">Tanlang va buyurtma bering</span>
             </div>
 
-            <!-- Taom 2 -->
-            <div class="bg-white p-3.5 rounded-2xl border border-stone-200/80 shadow-xs flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold text-stone-800 text-sm">Manti (1 dona)</h3>
-                    <p class="text-amber-600 font-semibold text-xs">6 000 so'm</p>
+            <!-- Taom 1: Osh -->
+            <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15 shadow-lg flex items-center gap-3.5 transition hover:border-amber-400/50">
+                <img src="https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=200&q=80" alt="Osh" class="w-16 h-16 rounded-xl object-cover shrink-0 border border-white/10">
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-bold text-white text-sm truncate">Osh (To'y oshi)</h3>
+                    <p class="text-[11px] text-zinc-400 truncate">Go'sht, sabzi, no'xat, mayiz</p>
+                    <p class="text-amber-400 font-bold text-xs mt-1">35 000 so'm</p>
                 </div>
-                <button onclick="addToCart('Manti (1 dona)', 6000)" class="bg-stone-100 hover:bg-amber-500 hover:text-white text-stone-800 font-bold w-9 h-9 rounded-xl flex items-center justify-center transition text-lg">+</button>
+                <button onclick="addToCart('Osh (To\'y oshi)', 35000)" class="bg-amber-500 hover:bg-amber-400 active:scale-90 text-zinc-950 font-bold w-9 h-9 rounded-xl flex items-center justify-center transition text-lg shrink-0 shadow-md">+</button>
             </div>
 
-            <!-- Taom 3 -->
-            <div class="bg-white p-3.5 rounded-2xl border border-stone-200/80 shadow-xs flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold text-stone-800 text-sm">Koka-Kola 0.5L</h3>
-                    <p class="text-amber-600 font-semibold text-xs">8 000 so'm</p>
+            <!-- Taom 2: Manti -->
+            <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15 shadow-lg flex items-center gap-3.5 transition hover:border-amber-400/50">
+                <img src="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=200&q=80" alt="Manti" class="w-16 h-16 rounded-xl object-cover shrink-0 border border-white/10">
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-bold text-white text-sm truncate">Manti (1 dona)</h3>
+                    <p class="text-[11px] text-zinc-400 truncate">Qo'y go'shti va piyozli</p>
+                    <p class="text-amber-400 font-bold text-xs mt-1">6 000 so'm</p>
                 </div>
-                <button onclick="addToCart('Koka-Kola 0.5L', 8000)" class="bg-stone-100 hover:bg-amber-500 hover:text-white text-stone-800 font-bold w-9 h-9 rounded-xl flex items-center justify-center transition text-lg">+</button>
+                <button onclick="addToCart('Manti (1 dona)', 6000)" class="bg-amber-500 hover:bg-amber-400 active:scale-90 text-zinc-950 font-bold w-9 h-9 rounded-xl flex items-center justify-center transition text-lg shrink-0 shadow-md">+</button>
+            </div>
+
+            <!-- Taom 3: Shashlik -->
+            <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15 shadow-lg flex items-center gap-3.5 transition hover:border-amber-400/50">
+                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=200&q=80" alt="Shashlik" class="w-16 h-16 rounded-xl object-cover shrink-0 border border-white/10">
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-bold text-white text-sm truncate">Qiyma Shashlik</h3>
+                    <p class="text-[11px] text-zinc-400 truncate">Ko'mirda pishirilgan, piyoz bilan</p>
+                    <p class="text-amber-400 font-bold text-xs mt-1">18 000 so'm</p>
+                </div>
+                <button onclick="addToCart('Qiyma Shashlik', 18000)" class="bg-amber-500 hover:bg-amber-400 active:scale-90 text-zinc-950 font-bold w-9 h-9 rounded-xl flex items-center justify-center transition text-lg shrink-0 shadow-md">+</button>
+            </div>
+
+            <!-- Taom 4: Koka-Kola -->
+            <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15 shadow-lg flex items-center gap-3.5 transition hover:border-amber-400/50">
+                <img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=200&q=80" alt="Koka-Kola" class="w-16 h-16 rounded-xl object-cover shrink-0 border border-white/10">
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-bold text-white text-sm truncate">Koka-Kola 0.5L</h3>
+                    <p class="text-[11px] text-zinc-400 truncate">Muzdek ichimlik</p>
+                    <p class="text-amber-400 font-bold text-xs mt-1">8 000 so'm</p>
+                </div>
+                <button onclick="addToCart('Koka-Kola 0.5L', 8000)" class="bg-amber-500 hover:bg-amber-400 active:scale-90 text-zinc-950 font-bold w-9 h-9 rounded-xl flex items-center justify-center transition text-lg shrink-0 shadow-md">+</button>
             </div>
         </div>
     </main>
 
-    <!-- Pastki Savatcha Paneli (Faqat taom tanlanganda chiqadi) -->
-    <div id="cart-container" class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-stone-200 p-4 shadow-lg transition-transform duration-300 translate-y-full z-40">
+    <!-- Estetik Stol Raqamini So'rash Oynasi (Modal) -->
+    <div id="table-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-white/15 rounded-3xl p-6 max-w-xs w-full shadow-2xl space-y-4 text-center">
+            <div class="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center text-2xl mx-auto border border-amber-500/30">
+                🪑
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-white">Stol raqamingiz?</h3>
+                <p class="text-xs text-zinc-400 mt-1">Buyurtma va ofitsiant sizni topishi uchun stol raqamini kiriting</p>
+            </div>
+            <input type="number" id="modal-table-input" placeholder="Masalan: 4" min="1" max="100"
+                   class="w-full bg-zinc-800 border border-white/15 rounded-xl px-4 py-3 text-center text-white font-bold text-lg focus:outline-none focus:border-amber-500">
+            <div class="grid grid-cols-2 gap-2.5 pt-1">
+                <button onclick="closeTableModal()" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold py-2.5 rounded-xl text-xs transition">
+                    Bekor qilish
+                </button>
+                <button onclick="confirmTable()" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold py-2.5 rounded-xl text-xs transition shadow-lg">
+                    Tasdiqlash ✓
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pastki Savatcha Paneli -->
+    <div id="cart-container" class="fixed bottom-0 left-0 right-0 bg-zinc-900/95 backdrop-blur-xl border-t border-white/15 p-4 shadow-2xl transition-transform duration-300 translate-y-full z-40 rounded-t-3xl">
         <div class="max-w-md mx-auto space-y-3">
             <div class="flex justify-between items-center">
-                <h3 class="font-bold text-stone-900 text-sm">🛒 Sizning buyurtmangiz</h3>
-                <span id="total-price" class="text-amber-600 font-bold text-sm">0 so'm</span>
+                <h3 class="font-bold text-white text-sm">🛒 Sizning savatchangiz</h3>
+                <span id="total-price" class="text-amber-400 font-bold text-sm">0 so'm</span>
             </div>
             
             <!-- Tanlangan taomlar ro'yxati (1x, 2x bo'lib chiqadi) -->
-            <div id="cart-items" class="space-y-2 max-h-40 overflow-y-auto text-xs">
-                <!-- JavaScript orqali to'ldiriladi -->
-            </div>
+            <div id="cart-items" class="space-y-2 max-h-40 overflow-y-auto text-xs pr-1"></div>
 
-            <button onclick="sendOrder()" class="w-full bg-stone-900 hover:bg-stone-800 text-white font-bold py-3 rounded-xl shadow-md transition active:scale-95 text-sm">
+            <button onclick="sendOrder()" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-zinc-950 font-bold py-3.5 rounded-xl shadow-lg transition active:scale-95 text-sm">
                 Buyurtmani yuborish 🚀
             </button>
         </div>
@@ -101,23 +153,57 @@
     <!-- JavaScript Qismi -->
     <script>
         const BOT_TOKEN = "9253111920:AAEhDaKcjs9InrRqOgpwdF-gS9U8-w-4m7A";
-        const CHAT_ID = "@onlinekafe_bot";
+        
+        // DIQQAT: Bu yerga botingiz admin bo'lgan KANAL username'ini (masalan: "@kanal_nomi") 
+        // yoki o'zingizning shaxsiy ID raqamingizni ("8305010615") yozing. 
+        // Bot o'zining username'iga (@onlinekafe_bot) xabar yubora olmaydi!
+        const CHAT_ID = "@onlinekafe_bot"; 
 
         let tableNum = null;
-        let cart = {}; // Taomlarni saqlash uchun obyekt
+        let pendingAction = null; // Stol kiritilgandan keyin bajariladigan ishni eslab turadi
+        let cart = {};
 
-        // Stol raqamini so'rab olish funksiyasi
-        function getTableNumber() {
-            if (!tableNum) {
-                let input = prompt("Iltimos, o'tirgan stolingiz raqamini kiriting (masalan: 1, 2, 3):", "1");
-                if (input && input.trim() !== "") {
-                    tableNum = input.trim();
-                    document.getElementById('table-badge').innerText = "Stol: " + tableNum;
-                    document.getElementById('table-badge').className = "bg-stone-900 text-white px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide shadow-sm";
-                }
-            }
-            return tableNum;
+        // Estetik modalni ochish
+        function openTableModal(callback = null) {
+            pendingAction = callback;
+            const modal = document.getElementById('table-modal');
+            const input = document.getElementById('modal-table-input');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            input.value = tableNum || '';
+            setTimeout(() => input.focus(), 100);
         }
+
+        function closeTableModal() {
+            const modal = document.getElementById('table-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            pendingAction = null;
+        }
+
+        function confirmTable() {
+            const input = document.getElementById('modal-table-input').value;
+            if (!input || input.trim() === "") {
+                showToast("Iltimos, stol raqamini kiriting!", true);
+                return;
+            }
+            tableNum = input.trim();
+            const badge = document.getElementById('table-badge');
+            badge.innerText = "📍 Stol: #" + tableNum;
+            badge.className = "bg-amber-500 text-zinc-950 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-md cursor-pointer";
+            
+            const actionToRun = pendingAction;
+            closeTableModal();
+
+            if (actionToRun) {
+                actionToRun();
+            }
+        }
+
+        // Enter tugmasi bosilganda ham tasdiqlash
+        document.getElementById('modal-table-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') confirmTable();
+        });
 
         // Toast xabarnoma
         function showToast(message, isError = false) {
@@ -128,9 +214,9 @@
 
             toastText.innerText = message;
             toastBg.className = isError 
-                ? "bg-rose-600 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-medium"
-                : "bg-stone-900 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-medium";
-            toastIcon.innerText = isError ? "❌" : "✨";
+                ? "bg-rose-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-sm font-medium border border-white/15"
+                : "bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-sm font-medium border border-white/15";
+            toastIcon.innerText = isError ? "❌" : "✅";
 
             toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
             setTimeout(() => {
@@ -147,7 +233,6 @@
             updateCartUI();
         }
 
-        // Savatchadan kamaytirish yoki o'chirish
         function changeQty(name, amount) {
             if (cart[name]) {
                 cart[name].qty += amount;
@@ -158,7 +243,7 @@
             updateCartUI();
         }
 
-        // Savatcha dizaynini yangilash (1x, 2x qilib ko'rsatish)
+        // Savatcha UI yangilash
         function updateCartUI() {
             const cartContainer = document.getElementById('cart-container');
             const cartItemsEl = document.getElementById('cart-items');
@@ -174,15 +259,18 @@
                 let itemTotal = item.price * item.qty;
                 totalSum += itemTotal;
 
+                // Qo'shtirnoq xatosi chiqmasligi uchun xavfsiz kodlash
+                let safeName = name.replace(/'/g, "\\'");
+
                 let row = document.createElement('div');
-                row.className = "flex justify-between items-center bg-stone-50 p-2 rounded-xl border border-stone-200";
+                row.className = "flex justify-between items-center bg-white/5 p-2.5 rounded-xl border border-white/10";
                 row.innerHTML = `
-                    <span class="font-medium text-stone-800">${name}</span>
-                    <div class="flex items-center gap-2">
-                        <span class="text-amber-600 font-bold">${item.qty}x (${itemTotal.toLocaleString()} so'm)</span>
-                        <div class="flex items-center gap-1 bg-white border border-stone-200 rounded-lg overflow-hidden">
-                            <button onclick="changeQty('${name}', -1)" class="px-2 py-0.5 text-stone-600 hover:bg-stone-100 font-bold">-</button>
-                            <button onclick="changeQty('${name}', 1)" class="px-2 py-0.5 text-stone-600 hover:bg-stone-100 font-bold">+</button>
+                    <span class="font-medium text-white">${name}</span>
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-amber-400 font-bold">${item.qty}x <span class="text-zinc-400 font-normal">(${itemTotal.toLocaleString()} so'm)</span></span>
+                        <div class="flex items-center bg-zinc-800 border border-white/10 rounded-lg overflow-hidden">
+                            <button onclick="changeQty('${safeName}', -1)" class="px-2.5 py-1 text-zinc-300 hover:bg-zinc-700 font-bold">-</button>
+                            <button onclick="changeQty('${safeName}', 1)" class="px-2.5 py-1 text-zinc-300 hover:bg-zinc-700 font-bold">+</button>
                         </div>
                     </div>
                 `;
@@ -198,8 +286,8 @@
             }
         }
 
-        // Telegramga yuborish umumiy funksiyasi
-        function sendToTelegram(messageText) {
+        // Telegramga yuborish
+        function sendToTelegram(messageText, onSuccess = null) {
             const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
             const data = {
                 chat_id: CHAT_ID,
@@ -215,31 +303,35 @@
             .then(res => res.json())
             .then(res => {
                 if (res.ok) {
-                    showToast("Muvaffaqiyatli yuborildi!");
+                    showToast("So'rovingiz ofitsiantga yuborildi!");
+                    if (onSuccess) onSuccess();
                 } else {
                     showToast("Xatolik: " + res.description, true);
                 }
             })
             .catch(() => {
-                showToast("Tarmoq xatoligi!", true);
+                showToast("Internet bilan muammo yuz berdi!", true);
             });
         }
 
-        // Ofitsiant chaqirish yoki hisob so'rash
+        // Ofitsiant chaqirish yoki chek so'rash
         function callService(actionName) {
-            let stol = getTableNumber();
-            if (!stol) return; // Agar stol kiritmasa yubormaydi
-
-            let message = `🚨 *Yangi xabar!*\n\n📍 *Stol:* ${stol}\n⚡ *Holat:* ${actionName}`;
+            if (!tableNum) {
+                openTableModal(() => callService(actionName));
+                return;
+            }
+            let message = `🚨 *Yangi xabar!*\n\n📍 *Stol:* #${tableNum}\n⚡ *Holat:* ${actionName}`;
             sendToTelegram(message);
         }
 
         // Buyurtmani yuborish
         function sendOrder() {
-            let stol = getTableNumber();
-            if (!stol) return;
+            if (!tableNum) {
+                openTableModal(() => sendOrder());
+                return;
+            }
 
-            let message = `🛒 *Yangi buyurtma!*\n\n📍 *Stol:* ${stol}\n\n`;
+            let message = `🛒 *Yangi buyurtma!*\n\n📍 *Stol:* #${tableNum}\n\n`;
             let totalSum = 0;
 
             for (let name in cart) {
@@ -251,11 +343,10 @@
 
             message += `\n💰 *Umumiy summa:* *${totalSum.toLocaleString()} so'm*`;
 
-            sendToTelegram(message);
-
-            // Buyurtma ketgandan keyin savatchani tozalash
-            cart = {};
-            updateCartUI();
+            sendToTelegram(message, () => {
+                cart = {};
+                updateCartUI();
+            });
         }
     </script>
 </body>
