@@ -15,6 +15,9 @@
             background-position: center;
             background-attachment: fixed;
         }
+        /* Scrollbarni yashirish lekin swipe qilish imkonini qoldirish */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="text-white antialiased min-h-screen pb-36">
@@ -31,18 +34,12 @@
                 </div>
             </div>
 
-            <!-- Yaqqol ko'rinib turuvchi 3 ta til tugmasi + Stol -->
+            <!-- Til tugmalari + Stol -->
             <div class="flex items-center gap-1.5">
                 <div class="flex bg-zinc-800/90 p-0.5 rounded-xl border border-white/15">
-                    <button onclick="setLanguage('uz')" id="btn-uz" class="px-2 py-1 rounded-lg text-[10px] font-bold transition bg-amber-500 text-zinc-950">
-                        UZB
-                    </button>
-                    <button onclick="setLanguage('cyr')" id="btn-cyr" class="px-2 py-1 rounded-lg text-[10px] font-bold transition text-zinc-300 hover:text-white">
-                        КИРИЛ
-                    </button>
-                    <button onclick="setLanguage('ru')" id="btn-ru" class="px-2 py-1 rounded-lg text-[10px] font-bold transition text-zinc-300 hover:text-white">
-                        РУС
-                    </button>
+                    <button onclick="setLanguage('uz')" id="btn-uz" class="px-2 py-1 rounded-lg text-[10px] font-bold transition bg-amber-500 text-zinc-950">UZB</button>
+                    <button onclick="setLanguage('cyr')" id="btn-cyr" class="px-2 py-1 rounded-lg text-[10px] font-bold transition text-zinc-300 hover:text-white">КИРИЛ</button>
+                    <button onclick="setLanguage('ru')" id="btn-ru" class="px-2 py-1 rounded-lg text-[10px] font-bold transition text-zinc-300 hover:text-white">РУС</button>
                 </div>
 
                 <button onclick="openTableModal()" id="table-badge" class="bg-white/10 hover:bg-white/20 border border-white/15 text-amber-400 px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition cursor-pointer shrink-0">
@@ -53,7 +50,7 @@
     </header>
 
     <!-- Asosiy Kontent -->
-    <main class="max-w-md mx-auto p-4 space-y-6">
+    <main class="max-w-md mx-auto p-4 space-y-5">
         
         <!-- Toast Xabarnoma -->
         <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4 w-max max-w-[90%]">
@@ -65,25 +62,27 @@
 
         <!-- Tezkor Harakatlar -->
         <div class="grid grid-cols-2 gap-3 pt-1">
-            <button onclick="callService('🔔 Ofitsiantni chaqirish')" class="group bg-gradient-to-br from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 active:scale-95 text-white font-semibold py-3.5 px-4 rounded-2xl shadow-lg shadow-amber-500/20 transition-all flex flex-col items-center justify-center gap-1 border border-white/15">
-                <span class="text-2xl group-hover:scale-110 transition-transform">🔔</span>
+            <button onclick="callService('🔔 Ofitsiantni chaqirish')" class="group bg-gradient-to-br from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 active:scale-95 text-white font-semibold py-3 px-4 rounded-2xl shadow-lg shadow-amber-500/20 transition-all flex flex-col items-center justify-center gap-1 border border-white/15">
+                <span class="text-xl group-hover:scale-110 transition-transform">🔔</span>
                 <span id="txt-call-waiter" class="text-xs tracking-wide">Ofitsiant chaqirish</span>
             </button>
-            <button onclick="callService('🧾 Hisobni so\'rash (Chek)')" class="group bg-white/10 hover:bg-white/15 backdrop-blur-md active:scale-95 text-white font-semibold py-3.5 px-4 rounded-2xl shadow-lg transition-all flex flex-col items-center justify-center gap-1 border border-white/15">
-                <span class="text-2xl group-hover:scale-110 transition-transform">🧾</span>
+            <button onclick="callService('🧾 Hisobni so\'rash (Chek)')" class="group bg-white/10 hover:bg-white/15 backdrop-blur-md active:scale-95 text-white font-semibold py-3 px-4 rounded-2xl shadow-lg transition-all flex flex-col items-center justify-center gap-1 border border-white/15">
+                <span class="text-xl group-hover:scale-110 transition-transform">🧾</span>
                 <span id="txt-ask-check" class="text-xs tracking-wide">Hisobni so'rash</span>
             </button>
         </div>
 
-        <!-- Menyu Bo'limi -->
-        <div class="space-y-3.5">
-            <div class="flex justify-between items-center px-1">
-                <h2 id="txt-menu-title" class="text-base font-bold text-white tracking-tight">🍽 Asosiy Menyu</h2>
-                <span id="txt-menu-desc" class="text-xs text-zinc-400">Tanlang va buyurtma bering</span>
+        <!-- Kategoriyalar Paneli (Yonma-yon suriladigan) -->
+        <div class="space-y-2">
+            <h2 id="txt-menu-title" class="text-base font-bold text-white tracking-tight px-1">🍽 Menyu</h2>
+            <div id="categories-container" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+                <!-- JavaScript orqali to'ldiriladi -->
             </div>
+        </div>
 
-            <!-- Taomlar Ro'yxati -->
-            <div id="menu-items-container" class="space-y-3.5"></div>
+        <!-- Taomlar Ro'yxati -->
+        <div id="menu-items-container" class="space-y-3.5">
+            <!-- JavaScript orqali tanlangan kategoriya bo'yicha chiqadi -->
         </div>
     </main>
 
@@ -95,43 +94,4 @@
             </div>
             <div>
                 <h3 id="modal-title" class="text-lg font-bold text-white">Stol raqamingiz?</h3>
-                <p id="modal-desc" class="text-xs text-zinc-400 mt-1">Buyurtma va ofitsiant sizni topishi uchun stol raqamini kiriting</p>
-            </div>
-            <input type="number" id="modal-table-input" placeholder="4" min="1" max="100"
-                   class="w-full bg-zinc-800 border border-white/15 rounded-xl px-4 py-3 text-center text-white font-bold text-lg focus:outline-none focus:border-amber-500">
-            <div class="grid grid-cols-2 gap-2.5 pt-1">
-                <button onclick="closeTableModal()" id="modal-cancel-btn" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold py-2.5 rounded-xl text-xs transition">
-                    Bekor qilish
-                </button>
-                <button onclick="confirmTable()" id="modal-confirm-btn" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold py-2.5 rounded-xl text-xs transition shadow-lg">
-                    Tasdiqlash ✓
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pastki Savatcha Paneli -->
-    <div id="cart-container" class="fixed bottom-0 left-0 right-0 bg-zinc-900/95 backdrop-blur-xl border-t border-white/15 p-4 shadow-2xl transition-transform duration-300 translate-y-full z-40 rounded-t-3xl">
-        <div class="max-w-md mx-auto space-y-3">
-            <div class="flex justify-between items-center">
-                <h3 id="cart-title" class="font-bold text-white text-sm">🛒 Sizning savatchangiz</h3>
-                <span id="total-price" class="text-amber-400 font-bold text-sm">0 so'm</span>
-            </div>
-            
-            <div id="cart-items" class="space-y-2 max-h-40 overflow-y-auto text-xs pr-1"></div>
-
-            <button onclick="sendOrder()" id="cart-send-btn" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-zinc-950 font-bold py-3.5 rounded-xl shadow-lg transition active:scale-95 text-sm">
-                Buyurtmani yuborish 🚀
-            </button>
-        </div>
-    </div>
-
-    <!-- JavaScript Qismi -->
-    <script>
-        const BOT_TOKEN = "9253111920:AAEhDaKcjs9InrRqOgpwdF-gS9U8-w-4m7A";
-        const CHAT_ID = "8305010615"; // Botingiz admin bo'lgan kanal yoki shaxsiy ID
-
-        let currentLang = 'uz';
-        let tableNum = null;
-        let pendingAction = null;
-        let cart = {};
+                <p id="modal-desc" class="text-xs text-zinc-400 mt
