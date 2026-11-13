@@ -9,24 +9,22 @@
     <style>
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-image: linear-gradient(to bottom, rgba(24, 24, 27, 0.78), rgba(24, 24, 27, 0.92)), 
+            background-image: linear-gradient(to bottom, rgba(24, 24, 27, 0.8), rgba(24, 24, 27, 0.95)), 
                               url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
         }
-        /* Scrollbarni yashirish lekin swipe qilish imkonini qoldirish */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="text-white antialiased min-h-screen pb-36">
 
-    <!-- Estetik Sarlavha -->
-    <header class="bg-zinc-900/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-40 px-3 py-3 shadow-lg">
+    <!-- Sarlavha -->
+    <header class="bg-zinc-900/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-40 px-3 py-3 shadow-lg">
         <div class="max-w-md mx-auto flex justify-between items-center gap-2">
-            <!-- Kafe Logosi -->
-            <div class="flex items-center gap-2 shrink-0">
+            <div class="flex items-center gap-2">
                 <span class="text-xl bg-amber-500/20 p-1.5 rounded-xl border border-amber-500/30">☕</span>
                 <div>
                     <h1 class="font-bold text-sm tracking-tight text-white leading-none">Aura Cafe</h1>
@@ -34,64 +32,308 @@
                 </div>
             </div>
 
-            <!-- Til tugmalari + Stol -->
+            <!-- Til va Stol -->
             <div class="flex items-center gap-1.5">
-                <div class="flex bg-zinc-800/90 p-0.5 rounded-xl border border-white/15">
-                    <button onclick="setLanguage('uz')" id="btn-uz" class="px-2 py-1 rounded-lg text-[10px] font-bold transition bg-amber-500 text-zinc-950">UZB</button>
-                    <button onclick="setLanguage('cyr')" id="btn-cyr" class="px-2 py-1 rounded-lg text-[10px] font-bold transition text-zinc-300 hover:text-white">КИРИЛ</button>
-                    <button onclick="setLanguage('ru')" id="btn-ru" class="px-2 py-1 rounded-lg text-[10px] font-bold transition text-zinc-300 hover:text-white">РУС</button>
+                <div class="flex bg-zinc-800 p-0.5 rounded-xl border border-white/15">
+                    <button onclick="setLang('uz')" id="b-uz" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-amber-500 text-zinc-950 transition">UZ</button>
+                    <button onclick="setLang('cyr')" id="b-cyr" class="px-2 py-1 rounded-lg text-[10px] font-bold text-zinc-300 transition">ЎЗ</button>
+                    <button onclick="setLang('ru')" id="b-ru" class="px-2 py-1 rounded-lg text-[10px] font-bold text-zinc-300 transition">RU</button>
                 </div>
-
-                <button onclick="openTableModal()" id="table-badge" class="bg-white/10 hover:bg-white/20 border border-white/15 text-amber-400 px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition cursor-pointer shrink-0">
+                <button onclick="openModal()" id="table-badge" class="bg-white/10 hover:bg-white/25 border border-white/15 text-amber-400 px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition">
                     📍 Stol
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Asosiy Kontent -->
+    <!-- Asosiy qism -->
     <main class="max-w-md mx-auto p-4 space-y-5">
         
-        <!-- Toast Xabarnoma -->
+        <!-- Xabarnoma (Toast) -->
         <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4 w-max max-w-[90%]">
             <div id="toast-bg" class="bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-sm font-medium border border-white/15">
                 <span id="toast-icon">✅</span>
-                <span id="toast-text">Amaliyot bajarildi</span>
+                <span id="toast-text">Bajarildi</span>
             </div>
         </div>
 
-        <!-- Tezkor Harakatlar -->
-        <div class="grid grid-cols-2 gap-3 pt-1">
-            <button onclick="callService('🔔 Ofitsiantni chaqirish')" class="group bg-gradient-to-br from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 active:scale-95 text-white font-semibold py-3 px-4 rounded-2xl shadow-lg shadow-amber-500/20 transition-all flex flex-col items-center justify-center gap-1 border border-white/15">
-                <span class="text-xl group-hover:scale-110 transition-transform">🔔</span>
-                <span id="txt-call-waiter" class="text-xs tracking-wide">Ofitsiant chaqirish</span>
+        <!-- Ofitsiant va Chek -->
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="callService('🔔 Ofitsiantni chaqirish')" class="bg-amber-500 hover:bg-amber-400 active:scale-95 text-zinc-950 font-bold py-3 px-4 rounded-2xl shadow-lg transition flex flex-col items-center justify-center gap-1">
+                <span class="text-xl">🔔</span>
+                <span id="txt-waiter" class="text-xs">Ofitsiant chaqirish</span>
             </button>
-            <button onclick="callService('🧾 Hisobni so\'rash (Chek)')" class="group bg-white/10 hover:bg-white/15 backdrop-blur-md active:scale-95 text-white font-semibold py-3 px-4 rounded-2xl shadow-lg transition-all flex flex-col items-center justify-center gap-1 border border-white/15">
-                <span class="text-xl group-hover:scale-110 transition-transform">🧾</span>
-                <span id="txt-ask-check" class="text-xs tracking-wide">Hisobni so'rash</span>
+            <button onclick="callService('🧾 Hisobni so\'rash')" class="bg-white/10 hover:bg-white/20 active:scale-95 text-white font-bold py-3 px-4 rounded-2xl border border-white/15 shadow-lg transition flex flex-col items-center justify-center gap-1">
+                <span class="text-xl">🧾</span>
+                <span id="txt-check" class="text-xs">Hisobni so'rash</span>
             </button>
         </div>
 
-        <!-- Kategoriyalar Paneli (Yonma-yon suriladigan) -->
+        <!-- Kategoriyalar -->
         <div class="space-y-2">
-            <h2 id="txt-menu-title" class="text-base font-bold text-white tracking-tight px-1">🍽 Menyu</h2>
-            <div id="categories-container" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-                <!-- JavaScript orqali to'ldiriladi -->
-            </div>
+            <h2 id="txt-menu" class="text-base font-bold text-white px-1">🍽 Menyu</h2>
+            <div id="cat-list" class="flex gap-2 overflow-x-auto no-scrollbar py-1"></div>
         </div>
 
-        <!-- Taomlar Ro'yxati -->
-        <div id="menu-items-container" class="space-y-3.5">
-            <!-- JavaScript orqali tanlangan kategoriya bo'yicha chiqadi -->
-        </div>
+        <!-- Taomlar -->
+        <div id="menu-list" class="space-y-3.5"></div>
     </main>
 
-    <!-- Stol Raqamini So'rash Oynasi (Modal) -->
-    <div id="table-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <!-- Stol oynasi (Modal) -->
+    <div id="modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-zinc-900 border border-white/15 rounded-3xl p-6 max-w-xs w-full shadow-2xl space-y-4 text-center">
-            <div class="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center text-2xl mx-auto border border-amber-500/30">
-                🪑
-            </div>
+            <div class="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center text-2xl mx-auto border border-amber-500/30">🪑</div>
             <div>
-                <h3 id="modal-title" class="text-lg font-bold text-white">Stol raqamingiz?</h3>
-                <p id="modal-desc" class="text-xs text-zinc-400 mt
+                <h3 id="m-title" class="text-lg font-bold text-white">Stol raqamingiz?</h3>
+                <p id="m-desc" class="text-xs text-zinc-400 mt-1">Stol raqamini kiriting</p>
+            </div>
+            <input type="number" id="m-input" placeholder="1" class="w-full bg-zinc-800 border border-white/15 rounded-xl px-4 py-3 text-center text-white font-bold text-lg outline-none focus:border-amber-500">
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="closeModal()" id="m-cancel" class="bg-zinc-800 text-zinc-300 py-2.5 rounded-xl text-xs font-semibold">Bekor qilish</button>
+                <button onclick="saveTable()" id="m-ok" class="bg-amber-500 text-zinc-950 py-2.5 rounded-xl text-xs font-bold">Tasdiqlash</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Savatcha -->
+    <div id="cart-box" class="fixed bottom-0 left-0 right-0 bg-zinc-900/95 backdrop-blur-xl border-t border-white/15 p-4 shadow-2xl transition-transform duration-300 translate-y-full z-40 rounded-t-3xl">
+        <div class="max-w-md mx-auto space-y-3">
+            <div class="flex justify-between items-center">
+                <h3 id="cart-t" class="font-bold text-white text-sm">🛒 Savatcha</h3>
+                <span id="cart-total" class="text-amber-400 font-bold text-sm">0 so'm</span>
+            </div>
+            <div id="cart-items" class="space-y-2 max-h-40 overflow-y-auto text-xs"></div>
+            <button onclick="sendOrder()" id="cart-btn" class="w-full bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold py-3.5 rounded-xl shadow-lg transition text-sm">Buyurtmani yuborish 🚀</button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const BOT_TOKEN = "9253111920:AAEhDaKcjs9InrRqOgpwdF-gS9U8-w-4m7A";
+        const CHAT_ID = "8305010615"; // Kanal yoki shaxsiy ID
+
+        let lang = 'uz';
+        let activeCat = 'all';
+        let tableNum = null;
+        let pendingCallback = null;
+        let cart = {};
+
+        const data = [
+            // Salatlar
+            { id: 's1', cat: 'salads', price: 25000, img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=200&q=80',
+              names: { uz: "Grek salati", cyr: "Грек салати", ru: "Греческий салат" }, desc: "Pomidor, bodring, pishloq" },
+            { id: 's2', cat: 'salads', price: 22000, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=200&q=80',
+              names: { uz: "Olivye", cyr: "Оливье", ru: "Оливье" }, desc: "An'anaviy salat" },
+            
+            // Sho'rvalar
+            { id: 'sh1', cat: 'soups', price: 28000, img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=200&q=80',
+              names: { uz: "Qaynatma sho'rva", cyr: "Қайнатма шўрва", ru: "Шурпа" }, desc: "Mol go'shti bilan" },
+            { id: 'sh2', cat: 'soups', price: 24000, img: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=200&q=80',
+              names: { uz: "Mastava", cyr: "Мастава", ru: "Мастава" }, desc: "Guruchli sho'rva" },
+
+            // Asosiy ovqatlar
+            { id: 'm1', cat: 'main', price: 35000, img: 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=200&q=80',
+              names: { uz: "Osh (To'y oshi)", cyr: "Ош (Тўй оши)", ru: "Плов" }, desc: "Milliy taom" },
+            { id: 'm2', cat: 'main', price: 6000, img: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=200&q=80',
+              names: { uz: "Manti (1 dona)", cyr: "Манти (1 дона)", ru: "Манты (1 шт.)" }, desc: "Go'shtli" },
+            { id: 'm3', cat: 'main', price: 18000, img: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=200&q=80',
+              names: { uz: "Qiyma shashlik", cyr: "Қийма шашлик", ru: "Люля-кебаб" }, desc: "Ko'mirda pishirilgan" },
+
+            // Shirinliklar
+            { id: 'd1', cat: 'desserts', price: 20000, img: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=200&q=80',
+              names: { uz: "Medovik", cyr: "Медовик", ru: "Медовик" }, desc: "Asalli tort" },
+            { id: 'd2', cat: 'desserts', price: 26000, img: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=200&q=80',
+              names: { uz: "Chizkeyk", cyr: "Чизкейк", ru: "Чизкейк" }, desc: "Nyu-York" },
+
+            // Ichimliklar
+            { id: 'dr1', cat: 'drinks', price: 8000, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=200&q=80',
+              names: { uz: "Koka-Kola 0.5L", cyr: "Кока-Кола 0.5Л", ru: "Кока-Кола 0.5Л" }, desc: "Muzdek" },
+            { id: 'dr2', cat: 'drinks', price: 5000, img: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=200&q=80',
+              names: { uz: "Ko'k choy", cyr: "Кўк чой", ru: "Зеленый чай" }, desc: "Choynakda" }
+        ];
+
+        const tr = {
+            uz: { subtitle: "QR Menyu", waiter: "Ofitsiant", check: "Hisob", menu: "Menyu", cats: { all: "Barchasi", salads: "Salatlar", soups: "Sho'rvalar", main: "Asosiy", desserts: "Shirinliklar", drinks: "Ichimliklar" }, cart: "🛒 Savatcha", send: "Buyurtmani yuborish 🚀", badge: "📍 Stol", mTitle: "Stol raqami?", mDesc: "Stol raqamini kiriting", cancel: "Bekor qilish", ok: "Tasdiqlash", success: "Yuborildi!", err: "Xatolik!" },
+            cyr: { subtitle: "ҚР Меню", waiter: "Официант", check: "Ҳисоб", menu: "Меню", cats: { all: "Барчаси", salads: "Салатлар", soups: "Шўрвалар", main: "Асосий", desserts: "Ширинликлар", drinks: "Ичимликлар" }, cart: "🛒 Саватча", send: "Буюртмани юбориш 🚀", badge: "📍 Стол", mTitle: "Стол рақами?", mDesc: "Стол рақамини киритинг", cancel: "Бекор қилиш", ok: "Тасдиқлаш", success: "Юборилди!", err: "Хатолик!" },
+            ru: { subtitle: "QR Меню", waiter: "Официант", check: "Счёт", menu: "Меню", cats: { all: "Все", salads: "Салаты", soups: "Супы", main: "Основные", desserts: "Десерты", drinks: "Напитки" }, cart: "🛒 Корзина", send: "Отправить заказ 🚀", badge: "📍 Стол", mTitle: "Номер стола?", mDesc: "Введите номер стола", cancel: "Отмена", ok: "ОК", success: "Отправлено!", err: "Ошибка!" }
+        };
+
+        function setLang(l) {
+            lang = l;
+            ['uz', 'cyr', 'ru'].forEach(x => {
+                document.getElementById('b-' + x).className = x === l 
+                    ? "px-2 py-1 rounded-lg text-[10px] font-bold bg-amber-500 text-zinc-950 transition" 
+                    : "px-2 py-1 rounded-lg text-[10px] font-bold text-zinc-300 transition";
+            });
+            const t = tr[l];
+            document.getElementById('txt-subtitle').innerText = t.subtitle;
+            document.getElementById('txt-waiter').innerText = t.waiter;
+            document.getElementById('txt-check').innerText = t.check;
+            document.getElementById('txt-menu').innerText = t.menu;
+            document.getElementById('m-title').innerText = t.mTitle;
+            document.getElementById('m-desc').innerText = t.mDesc;
+            document.getElementById('m-cancel').innerText = t.cancel;
+            document.getElementById('m-ok').innerText = t.ok;
+            document.getElementById('cart-t').innerText = t.cart;
+            document.getElementById('cart-btn').innerText = t.send;
+            if (!tableNum) document.getElementById('table-badge').innerText = t.badge;
+
+            renderCats();
+            renderMenu();
+            updateCart();
+        }
+
+        function renderCats() {
+            const box = document.getElementById('cat-list');
+            box.innerHTML = '';
+            const cats = tr[lang].cats;
+            for (let k in cats) {
+                let btn = document.createElement('button');
+                btn.className = `px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap border shrink-0 ${activeCat === k ? 'bg-amber-500 text-zinc-950 border-amber-400' : 'bg-white/10 text-zinc-300 border-white/15'}`;
+                btn.innerText = cats[k];
+                btn.onclick = () => { activeCat = k; renderCats(); renderMenu(); };
+                box.appendChild(btn);
+            }
+        }
+
+        function renderMenu() {
+            const box = document.getElementById('menu-list');
+            box.innerHTML = '';
+            let items = activeCat === 'all' ? data : data.filter(i => i.cat === activeCat);
+
+            items.forEach(i => {
+                let name = i.names[lang] || i.names.uz;
+                let div = document.createElement('div');
+                div.className = "bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15 flex items-center gap-3.5 shadow-md";
+                div.innerHTML = `
+                    <img src="${i.img}" class="w-16 h-16 rounded-xl object-cover shrink-0">
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-bold text-white text-sm truncate">${name}</h3>
+                        <p class="text-[11px] text-zinc-400 truncate">${i.desc}</p>
+                        <p class="text-amber-400 font-bold text-xs mt-1">${i.price.toLocaleString()} so'm</p>
+                    </div>
+                    <button onclick="add('${i.id}')" class="bg-amber-500 text-zinc-950 font-bold w-9 h-9 rounded-xl flex items-center justify-center text-lg active:scale-90 transition">+</button>
+                `;
+                box.appendChild(div);
+            });
+        }
+
+        function openModal(cb) {
+            pendingCallback = cb;
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modal').classList.add('flex');
+            document.getElementById('m-input').value = tableNum || '';
+            setTimeout(() => document.getElementById('m-input').focus(), 100);
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            document.getElementById('modal').classList.remove('flex');
+            pendingCallback = null;
+        }
+
+        function saveTable() {
+            let val = document.getElementById('m-input').value.trim();
+            if (!val) return alert("Stol raqamini kiriting!");
+            tableNum = val;
+            document.getElementById('table-badge').innerText = "📍 #" + tableNum;
+            closeModal();
+            if (pendingCallback) pendingCallback();
+        }
+
+        function showToast(text, isErr = false) {
+            let t = document.getElementById('toast');
+            document.getElementById('toast-text').innerText = text;
+            document.getElementById('toast-bg').className = isErr ? "bg-rose-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-sm font-medium" : "bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-sm font-medium";
+            t.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+            setTimeout(() => t.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4'), 3000);
+        }
+
+        function add(id) {
+            if (!cart[id]) cart[id] = 0;
+            cart[id]++;
+            updateCart();
+        }
+
+        function change(id, delta) {
+            cart[id] += delta;
+            if (cart[id] <= 0) delete cart[id];
+            updateCart();
+        }
+
+        function updateCart() {
+            let box = document.getElementById('cart-box');
+            let container = document.getElementById('cart-items');
+            container.innerHTML = '';
+            let total = 0, has = false;
+
+            for (let id in cart) {
+                has = true;
+                let item = data.find(x => x.id === id);
+                let qty = cart[id];
+                let sum = item.price * qty;
+                total += sum;
+                let name = item.names[lang] || item.names.uz;
+
+                let row = document.createElement('div');
+                row.className = "flex justify-between items-center bg-white/5 p-2.5 rounded-xl border border-white/10";
+                row.innerHTML = `
+                    <span class="font-medium text-white">${name}</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-amber-400 font-bold">${qty}x (${sum.toLocaleString()} so'm)</span>
+                        <div class="flex bg-zinc-800 rounded-lg overflow-hidden border border-white/10">
+                            <button onclick="change('${id}', -1)" class="px-2 py-0.5 text-zinc-300 font-bold">-</button>
+                            <button onclick="change('${id}', 1)" class="px-2 py-0.5 text-zinc-300 font-bold">+</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(row);
+            }
+
+            document.getElementById('cart-total').innerText = total.toLocaleString() + " so'm";
+            if (has) box.classList.remove('translate-y-full');
+            else box.classList.add('translate-y-full');
+        }
+
+        function sendTg(text, cb) {
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: "Markdown" })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.ok) {
+                    showToast(tr[lang].success);
+                    if (cb) cb();
+                } else {
+                    showToast(tr[lang].err, true);
+                }
+            })
+            .catch(() => showToast(tr[lang].err, true));
+        }
+
+        function callService(action) {
+            if (!tableNum) { openModal(() => callService(action)); return; }
+            sendTg(`🚨 *Xabar*\n\n📍 *Stol:* #${tableNum}\n⚡ *Holat:* ${action}`);
+        }
+
+        function sendOrder() {
+            if (!tableNum) { openModal(() => sendOrder()); return; }
+            let msg = `🛒 *Yangi buyurtma!*\n\n📍 *Stol:* #${tableNum}\n\n`;
+            let total = 0;
+            for (let id in cart) {
+                let item = data.find(x => x.id === id);
+                let qty = cart[id];
+                let sum = item.price * qty;
+                total += sum;
+                msg += `▪️ ${item.names.uz} — *${qty}x* (${sum.toLocaleString()} so'm)\n`;
+            }
+            msg += `\n💰 *Jami:* *${total.toLocaleString()} so'm*`;
+            sendTg(msg, () => { cart = {}; updateCart(); });
+        }
+
+        setLang('uz');
+    </script>
+</body>
+</html>
