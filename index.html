@@ -81,4 +81,382 @@
     </main>
 
     <!-- Stol Raqamini So'rash Oynasi (Modal) -->
-    <div id="table-modal" class="fixed inset-
+    <div id="table-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-white/15 rounded-3xl p-6 max-w-xs w-full shadow-2xl space-y-4 text-center">
+            <div class="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center text-2xl mx-auto border border-amber-500/30">
+                🪑
+            </div>
+            <div>
+                <h3 id="modal-title" class="text-lg font-bold text-white">Stol raqamingiz?</h3>
+                <p id="modal-desc" class="text-xs text-zinc-400 mt-1">Buyurtma va ofitsiant sizni topishi uchun stol raqamini kiriting</p>
+            </div>
+            <input type="number" id="modal-table-input" placeholder="4" min="1" max="100"
+                   class="w-full bg-zinc-800 border border-white/15 rounded-xl px-4 py-3 text-center text-white font-bold text-lg focus:outline-none focus:border-amber-500">
+            <div class="grid grid-cols-2 gap-2.5 pt-1">
+                <button onclick="closeTableModal()" id="modal-cancel-btn" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold py-2.5 rounded-xl text-xs transition">
+                    Bekor qilish
+                </button>
+                <button onclick="confirmTable()" id="modal-confirm-btn" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold py-2.5 rounded-xl text-xs transition shadow-lg">
+                    Tasdiqlash ✓
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pastki Savatcha Paneli -->
+    <div id="cart-container" class="fixed bottom-0 left-0 right-0 bg-zinc-900/95 backdrop-blur-xl border-t border-white/15 p-4 shadow-2xl transition-transform duration-300 translate-y-full z-40 rounded-t-3xl">
+        <div class="max-w-md mx-auto space-y-3">
+            <div class="flex justify-between items-center">
+                <h3 id="cart-title" class="font-bold text-white text-sm">🛒 Sizning savatchangiz</h3>
+                <span id="total-price" class="text-amber-400 font-bold text-sm">0 so'm</span>
+            </div>
+            
+            <div id="cart-items" class="space-y-2 max-h-40 overflow-y-auto text-xs pr-1"></div>
+
+            <button onclick="sendOrder()" id="cart-send-btn" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-zinc-950 font-bold py-3.5 rounded-xl shadow-lg transition active:scale-95 text-sm">
+                Buyurtmani yuborish 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Qismi -->
+    <script>
+        const BOT_TOKEN = "9253111920:AAEhDaKcjs9InrRqOgpwdF-gS9U8-w-4m7A";
+        const CHAT_ID = "8305010615"; // Kanal yoki shaxsiy ID
+
+        let currentLang = 'uz'; // Standart til - O'zbekcha (Latin)
+        let tableNum = null;
+        let pendingAction = null;
+        let cart = {};
+
+        // Tillar lug'ati
+        const translations = {
+            uz: {
+                subtitle: "Online Menyu & Xizmat",
+                callWaiter: "Ofitsiant chaqirish",
+                askCheck: "Hisobni so'rash",
+                menuTitle: "🍽 Asosiy Menyu",
+                menuDesc: "Tanlang va buyurtma bering",
+                modalTitle: "Stol raqamingiz?",
+                modalDesc: "Buyurtma va ofitsiant sizni topishi uchun stol raqamini kiriting",
+                cancel: "Bekor qilish",
+                confirm: "Tasdiqlash ✓",
+                cartTitle: "🛒 Sizning savatchangiz",
+                sendOrder: "Buyurtmani yuborish 🚀",
+                toastSuccess: "So'rovingiz ofitsiantga yuborildi!",
+                tableNotEntered: "Iltimos, stol raqamini kiriting!",
+                netError: "Internet bilan muammo yuz berdi!",
+                tableBadge: "📍 Stol",
+                items: [
+                    { id: 'osh', name: "Osh (To'y oshi)", desc: "Go'sht, sabzi, no'xat, mayiz", priceText: "35 000 so'm" },
+                    { id: 'manti', name: "Manti (1 dona)", desc: "Qo'y go'shti va piyozli", priceText: "6 000 so'm" },
+                    { id: 'shashlik', name: "Qiyma Shashlik", desc: "Ko'mirda pishirilgan, piyoz bilan", priceText: "18 000 so'm" },
+                    { id: 'cola', name: "Koka-Kola 0.5L", desc: "Muzdek ichimlik", priceText: "8 000 so'm" }
+                ]
+            },
+            "uz-cyr": {
+                subtitle: "Онлайн Меню ва Хизмат",
+                callWaiter: "Официант чақириш",
+                askCheck: "Ҳисобни сўраш",
+                menuTitle: "🍽 Асосий Меню",
+                menuDesc: "Танланг ва буюртма беринг",
+                modalTitle: "Стол рақамингиз?",
+                modalDesc: "Буюртма ва официант сизни топиши учун стол рақамини киритинг",
+                cancel: "Бекор қилиш",
+                confirm: "Тасдиқлаш ✓",
+                cartTitle: "🛒 Сизнинг саватчангиз",
+                sendOrder: "Буюртмани юбориш 🚀",
+                toastSuccess: "Сўровингиз официантга юборилди!",
+                tableNotEntered: "Илтимос, стол рақамини киритинг!",
+                netError: "Интернет билан муаммо юз берди!",
+                tableBadge: "📍 Стол",
+                items: [
+                    { id: 'osh', name: "Ош (Тўй оши)", desc: "Гўшт, сабзи, нўхат, майиз", priceText: "35 000 сўм" },
+                    { id: 'manti', name: "Манти (1 дона)", desc: "Қўй гўшти ва пиёзли", priceText: "6 000 сўм" },
+                    { id: 'shashlik', name: "Қийма Шашлик", desc: "Кўмирда пиширилган, пиёз билан", priceText: "18 000 сўм" },
+                    { id: 'cola', name: "Кока-Кола 0.5Л", desc: "Муздек ичимлик", priceText: "8 000 сўм" }
+                ]
+            },
+            ru: {
+                subtitle: "Онлайн Меню и Сервис",
+                callWaiter: "Вызвать официанта",
+                askCheck: "Запросить счёт",
+                menuTitle: "🍽 Основное Меню",
+                menuDesc: "Выберите и сделайте заказ",
+                modalTitle: "Номер вашего стола?",
+                modalDesc: "Введите номер стола для заказа и вызова официанта",
+                cancel: "Отмена",
+                confirm: "Подтвердить ✓",
+                cartTitle: "🛒 Ваша корзина",
+                sendOrder: "Отправить заказ 🚀",
+                toastSuccess: "Ваш запрос отправлен официанту!",
+                tableNotEntered: "Пожалуйста, введите номер стола!",
+                netError: "Проблема с подключением к интернету!",
+                tableBadge: "📍 Стол",
+                items: [
+                    { id: 'osh', name: "Плов (Свадебный)", desc: "Мясо, морковь, нут, изюм", priceText: "35 000 сум" },
+                    { id: 'manti', name: "Манты (1 шт.)", desc: "С бараниной и луком", priceText: "6 000 сум" },
+                    { id: 'shashlik', name: "Люля-кебаб", desc: "На углях, с луком", priceText: "18 000 сум" },
+                    { id: 'cola', name: "Кока-Кола 0.5Л", desc: "Ледяной напиток", priceText: "8 000 сум" }
+                ]
+            }
+        };
+
+        const rawPrices = {
+            'osh': 35000,
+            'manti': 6000,
+            'shashlik': 18000,
+            'cola': 8000
+        };
+
+        const itemImages = {
+            'osh': 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=200&q=80',
+            'manti': 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=200&q=80',
+            'shashlik': 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=200&q=80',
+            'cola': 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=200&q=80'
+        };
+
+        // Asosiy o'zbekcha nomlar (Kanalga doimo o'zbekcha borishi uchun)
+        const uzItemNames = {
+            'osh': "Osh (To'y oshi)",
+            'manti': "Manti (1 dona)",
+            'shashlik': "Qiyma Shashlik",
+            'cola': "Koka-Kola 0.5L"
+        };
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
+
+            document.getElementById('txt-subtitle').innerText = t.subtitle;
+            document.getElementById('txt-call-waiter').innerText = t.callWaiter;
+            document.getElementById('txt-ask-check').innerText = t.askCheck;
+            document.getElementById('txt-menu-title').innerText = t.menuTitle;
+            document.getElementById('txt-menu-desc').innerText = t.menuDesc;
+            document.getElementById('modal-title').innerText = t.modalTitle;
+            document.getElementById('modal-desc').innerText = t.modalDesc;
+            document.getElementById('modal-cancel-btn').innerText = t.cancel;
+            document.getElementById('modal-confirm-btn').innerText = t.confirm;
+            document.getElementById('cart-title').innerText = t.cartTitle;
+            document.getElementById('cart-send-btn').innerText = t.sendOrder;
+
+            if (!tableNum) {
+                document.getElementById('table-badge').innerText = t.tableBadge;
+            }
+
+            renderMenu();
+            updateCartUI();
+        }
+
+        function renderMenu() {
+            const container = document.getElementById('menu-items-container');
+            container.innerHTML = '';
+            const t = translations[currentLang];
+
+            t.items.forEach(item => {
+                let div = document.createElement('div');
+                div.className = "bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15 shadow-lg flex items-center gap-3.5 transition hover:border-amber-400/50";
+                div.innerHTML = `
+                    <img src="${itemImages[item.id]}" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover shrink-0 border border-white/10">
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-bold text-white text-sm truncate">${item.name}</h3>
+                        <p class="text-[11px] text-zinc-400 truncate">${item.desc}</p>
+                        <p class="text-amber-400 font-bold text-xs mt-1">${item.priceText}</p>
+                    </div>
+                    <button onclick="addToCart('${item.id}')" class="bg-amber-500 hover:bg-amber-400 active:scale-90 text-zinc-950 font-bold w-9 h-9 rounded-xl flex items-center justify-center transition text-lg shrink-0 shadow-md">+</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function openTableModal(callback = null) {
+            pendingAction = callback;
+            const modal = document.getElementById('table-modal');
+            const input = document.getElementById('modal-table-input');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            input.value = tableNum || '';
+            setTimeout(() => input.focus(), 100);
+        }
+
+        function closeTableModal() {
+            const modal = document.getElementById('table-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            pendingAction = null;
+        }
+
+        function confirmTable() {
+            const input = document.getElementById('modal-table-input').value;
+            const t = translations[currentLang];
+            if (!input || input.trim() === "") {
+                showToast(t.tableNotEntered, true);
+                return;
+            }
+            tableNum = input.trim();
+            const badge = document.getElementById('table-badge');
+            badge.innerText = "📍 Stol: #" + tableNum;
+            badge.className = "bg-amber-500 text-zinc-950 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-md cursor-pointer";
+            
+            const actionToRun = pendingAction;
+            closeTableModal();
+
+            if (actionToRun) actionToRun();
+        }
+
+        document.getElementById('modal-table-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') confirmTable();
+        });
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastBg = document.getElementById('toast-bg');
+            const toastText = document.getElementById('toast-text');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastText.innerText = message;
+            toastBg.className = isError 
+                ? "bg-rose-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-sm font-medium border border-white/15"
+                : "bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-sm font-medium border border-white/15";
+            toastIcon.innerText = isError ? "❌" : "✅";
+
+            toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+            }, 3000);
+        }
+
+        function addToCart(id) {
+            if (!cart[id]) {
+                cart[id] = { qty: 0 };
+            }
+            cart[id].qty += 1;
+            updateCartUI();
+        }
+
+        function changeQty(id, amount) {
+            if (cart[id]) {
+                cart[id].qty += amount;
+                if (cart[id].qty <= 0) {
+                    delete cart[id];
+                }
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartContainer = document.getElementById('cart-container');
+            const cartItemsEl = document.getElementById('cart-items');
+            const totalPriceEl = document.getElementById('total-price');
+
+            cartItemsEl.innerHTML = '';
+            let totalSum = 0;
+            let hasItems = false;
+            const t = translations[currentLang];
+
+            for (let id in cart) {
+                hasItems = true;
+                let itemQty = cart[id].qty;
+                let itemPrice = rawPrices[id];
+                let itemTotal = itemPrice * itemQty;
+                totalSum += itemTotal;
+
+                // Joriy tildagi nomini topish
+                let currentItemInfo = t.items.find(x => x.id === id);
+                let displayName = currentItemInfo ? currentItemInfo.name : id;
+
+                let row = document.createElement('div');
+                row.className = "flex justify-between items-center bg-white/5 p-2.5 rounded-xl border border-white/10";
+                row.innerHTML = `
+                    <span class="font-medium text-white">${displayName}</span>
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-amber-400 font-bold">${itemQty}x <span class="text-zinc-400 font-normal">(${itemTotal.toLocaleString()} so'm)</span></span>
+                        <div class="flex items-center bg-zinc-800 border border-white/10 rounded-lg overflow-hidden">
+                            <button onclick="changeQty('${id}', -1)" class="px-2.5 py-1 text-zinc-300 hover:bg-zinc-700 font-bold">-</button>
+                            <button onclick="changeQty('${id}', 1)" class="px-2.5 py-1 text-zinc-300 hover:bg-zinc-700 font-bold">+</button>
+                        </div>
+                    </div>
+                `;
+                cartItemsEl.appendChild(row);
+            }
+
+            totalPriceEl.innerText = totalSum.toLocaleString() + " so'm";
+
+            if (hasItems) {
+                cartContainer.classList.remove('translate-y-full');
+            } else {
+                cartContainer.classList.add('translate-y-full');
+            }
+        }
+
+        function sendToTelegram(messageText, onSuccess = null) {
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            const data = {
+                chat_id: CHAT_ID,
+                text: messageText,
+                parse_mode: "Markdown"
+            };
+
+            const t = translations[currentLang];
+
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.ok) {
+                    showToast(t.toastSuccess);
+                    if (onSuccess) onSuccess();
+                } else {
+                    showToast("Xatolik: " + res.description, true);
+                }
+            })
+            .catch(() => {
+                showToast(t.netError, true);
+            });
+        }
+
+        function callService(actionName) {
+            if (!tableNum) {
+                openTableModal(() => callService(actionName));
+                return;
+            }
+            // Kanalga doimo tushunarli o'zbekcha yuboriladi
+            let message = `🚨 *Yangi xabar!*\n\n📍 *Stol:* #${tableNum}\n⚡ *Holat:* ${actionName}`;
+            sendToTelegram(message);
+        }
+
+        function sendOrder() {
+            if (!tableNum) {
+                openTableModal(() => sendOrder());
+                return;
+            }
+
+            // Kanalga doimo o'zbekcha nomlar bilan ketadi
+            let message = `🛒 *Yangi buyurtma!*\n\n📍 *Stol:* #${tableNum}\n\n`;
+            let totalSum = 0;
+
+            for (let id in cart) {
+                let itemQty = cart[id].qty;
+                let itemPrice = rawPrices[id];
+                let itemTotal = itemPrice * itemQty;
+                totalSum += itemTotal;
+                let uzName = uzItemNames[id] || id;
+                message += `▪️ ${uzName} — *${itemQty}x* (${itemTotal.toLocaleString()} so'm)\n`;
+            }
+
+            message += `\n💰 *Umumiy summa:* *${totalSum.toLocaleString()} so'm*`;
+
+            sendToTelegram(message, () => {
+                cart = {};
+                updateCartUI();
+            });
+        }
+
+        // Boshlang'ich render
+        renderMenu();
+    </script>
+</body>
+</html>
