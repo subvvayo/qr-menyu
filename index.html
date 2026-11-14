@@ -110,7 +110,7 @@
     <!-- JavaScript -->
     <script>
         const BOT_TOKEN = "9253111920:AAEhDaKcjs9InrRqOgpwdF-gS9U8-w-4m7A";
-        const CHAT_ID = "@onlinekafe_bot"; // Kanal yoki shaxsiy ID
+        const CHAT_ID = "8305010615"; // Kanal yoki shaxsiy ID
 
         let lang = 'uz';
         let activeCat = 'all';
@@ -121,41 +121,58 @@
         const data = [
             // Salatlar
             { id: 's1', cat: 'salads', price: 25000, img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=200&q=80',
-              names: { uz: "Grek salati", cyr: "Грек салати", ru: "Греческий салат" }, desc: "Pomidor, bodring, pishloq" },
+              names: { uz: "Grek salati", cyr: "Грек салати", ru: "Греческий салат" },
+              descs: { uz: "Pomidor, bodring, pishloq", cyr: "Помидор, бодринг, пишлоқ", ru: "Помидоры, огурцы, сыр" } },
+            
             { id: 's2', cat: 'salads', price: 22000, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=200&q=80',
-              names: { uz: "Olivye", cyr: "Оливье", ru: "Оливье" }, desc: "An'anaviy salat" },
+              names: { uz: "Olivye", cyr: "Оливье", ru: "Оливье" },
+              descs: { uz: "An'anaviy salat", cyr: "Анъанавий салат", ru: "Традиционный салат" } },
             
             // Sho'rvalar
             { id: 'sh1', cat: 'soups', price: 28000, img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=200&q=80',
-              names: { uz: "Qaynatma sho'rva", cyr: "Қайнатма шўрва", ru: "Шурпа" }, desc: "Mol go'shti bilan" },
+              names: { uz: "Qaynatma sho'rva", cyr: "Қайнатма шўрва", ru: "Шурпа" },
+              descs: { uz: "Mol go'shti bilan", cyr: "Мол гўшти билан", ru: "С говядиной" } },
+            
             { id: 'sh2', cat: 'soups', price: 24000, img: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=200&q=80',
-              names: { uz: "Mastava", cyr: "Мастава", ru: "Мастава" }, desc: "Guruchli sho'rva" },
+              names: { uz: "Mastava", cyr: "Мастава", ru: "Мастава" },
+              descs: { uz: "Guruchli sho'rva", cyr: "Гуручли шўрва", ru: "Рисовый суп" } },
 
             // Asosiy ovqatlar
             { id: 'm1', cat: 'main', price: 35000, img: 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=200&q=80',
-              names: { uz: "Osh (To'y oshi)", cyr: "Ош (Тўй оши)", ru: "Плов" }, desc: "Milliy taom" },
+              names: { uz: "Osh (To'y oshi)", cyr: "Ош (Тўй оши)", ru: "Плов (Свадебный)" },
+              descs: { uz: "Milliy taom", cyr: "Миллий таом", ru: "Национальное блюдо" } },
+            
             { id: 'm2', cat: 'main', price: 6000, img: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=200&q=80',
-              names: { uz: "Manti (1 dona)", cyr: "Манти (1 дона)", ru: "Манты (1 шт.)" }, desc: "Go'shtli" },
+              names: { uz: "Manti (1 dona)", cyr: "Манти (1 дона)", ru: "Манты (1 шт.)" },
+              descs: { uz: "Go'shtli", cyr: "Гўштли", ru: "С мясом" } },
+            
             { id: 'm3', cat: 'main', price: 18000, img: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=200&q=80',
-              names: { uz: "Qiyma shashlik", cyr: "Қийма шашлик", ru: "Люля-кебаб" }, desc: "Ko'mirda pishirilgan" },
+              names: { uz: "Qiyma shashlik", cyr: "Қийма шашлик", ru: "Люля-кебаб" },
+              descs: { uz: "Ko'mirda pishirilgan", cyr: "Кўмирда пиширилган", ru: "На углях" } },
 
             // Shirinliklar
             { id: 'd1', cat: 'desserts', price: 20000, img: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=200&q=80',
-              names: { uz: "Medovik", cyr: "Медовик", ru: "Медовик" }, desc: "Asalli tort" },
+              names: { uz: "Medovik", cyr: "Медовик", ru: "Медовик" },
+              descs: { uz: "Asalli tort", cyr: "Асалли торт", ru: "Медовый торт" } },
+            
             { id: 'd2', cat: 'desserts', price: 26000, img: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=200&q=80',
-              names: { uz: "Chizkeyk", cyr: "Чизкейк", ru: "Чизкейк" }, desc: "Nyu-York" },
+              names: { uz: "Chizkeyk", cyr: "Чизкейк", ru: "Чизкейк" },
+              descs: { uz: "Nyu-York", cyr: "Нью-Йорк", ru: "Нью-Йорк" } },
 
             // Ichimliklar
             { id: 'dr1', cat: 'drinks', price: 8000, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=200&q=80',
-              names: { uz: "Koka-Kola 0.5L", cyr: "Кока-Кола 0.5Л", ru: "Кока-Кола 0.5Л" }, desc: "Muzdek" },
+              names: { uz: "Koka-Kola 0.5L", cyr: "Кока-Кола 0.5Л", ru: "Кока-Кола 0.5Л" },
+              descs: { uz: "Muzdek", cyr: "Муздек", ru: "Ледяной" } },
+            
             { id: 'dr2', cat: 'drinks', price: 5000, img: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=200&q=80',
-              names: { uz: "Ko'k choy", cyr: "Кўк чой", ru: "Зеленый чай" }, desc: "Choynakda" }
+              names: { uz: "Ko'k choy", cyr: "Кўк чой", ru: "Зеленый чай" },
+              descs: { uz: "Choynakda", cyr: "Чойнакда", ru: "В чайнике" } }
         ];
 
         const tr = {
-            uz: { subtitle: "QR Menyu", waiter: "Ofitsiant", check: "Hisob", menu: "Menyu", cats: { all: "Barchasi", salads: "Salatlar", soups: "Sho'rvalar", main: "Asosiy", desserts: "Shirinliklar", drinks: "Ichimliklar" }, cart: "🛒 Savatcha", send: "Buyurtmani yuborish 🚀", badge: "📍 Stol", mTitle: "Stol raqami?", mDesc: "Stol raqamini kiriting", cancel: "Bekor qilish", ok: "Tasdiqlash", success: "Yuborildi!", err: "Xatolik!" },
-            cyr: { subtitle: "ҚР Меню", waiter: "Официант", check: "Ҳисоб", menu: "Меню", cats: { all: "Барчаси", salads: "Салатлар", soups: "Шўрвалар", main: "Асосий", desserts: "Ширинликлар", drinks: "Ичимликлар" }, cart: "🛒 Саватча", send: "Буюртмани юбориш 🚀", badge: "📍 Стол", mTitle: "Стол рақами?", mDesc: "Стол рақамини киритинг", cancel: "Бекор қилиш", ok: "Тасдиқлаш", success: "Юборилди!", err: "Хатолик!" },
-            ru: { subtitle: "QR Меню", waiter: "Официант", check: "Счёт", menu: "Меню", cats: { all: "Все", salads: "Салаты", soups: "Супы", main: "Основные", desserts: "Десерты", drinks: "Напитки" }, cart: "🛒 Корзина", send: "Отправить заказ 🚀", badge: "📍 Стол", mTitle: "Номер стола?", mDesc: "Введите номер стола", cancel: "Отмена", ok: "ОК", success: "Отправлено!", err: "Ошибка!" }
+            uz: { subtitle: "QR Menyu", waiter: "Ofitsiant", check: "Hisob", menu: "Menyu", cats: { all: "Barchasi", salads: "Salatlar", soups: "Sho'rvalar", main: "Asosiy", desserts: "Shirinliklar", drinks: "Ichimliklar" }, cart: "🛒 Savatcha", send: "Buyurtmani yuborish 🚀", badge: "📍 Stol", mTitle: "Stol raqami?", mDesc: "Stol raqamini kiriting", cancel: "Bekor qilish", ok: "Tasdiqlash", success: "Yuborildi!", err: "Xatolik!", currency: "so'm" },
+            cyr: { subtitle: "ҚР Меню", waiter: "Официант", check: "Ҳисоб", menu: "Меню", cats: { all: "Барчаси", salads: "Салатлар", soups: "Шўрвалар", main: "Асосий", desserts: "Ширинликлар", drinks: "Ичимликлар" }, cart: "🛒 Саватча", send: "Буюртмани юбориш 🚀", badge: "📍 Стол", mTitle: "Стол рақами?", mDesc: "Стол рақамини киритинг", cancel: "Бекор қилиш", ok: "Тасдиқлаш", success: "Юборилди!", err: "Хатолик!", currency: "сўм" },
+            ru: { subtitle: "QR Меню", waiter: "Официант", check: "Счёт", menu: "Меню", cats: { all: "Все", salads: "Салаты", soups: "Супы", main: "Основные", desserts: "Десерты", drinks: "Напитки" }, cart: "🛒 Корзина", send: "Отправить заказ 🚀", badge: "📍 Стол", mTitle: "Номер стола?", mDesc: "Введите номер стола", cancel: "Отмена", ok: "ОК", success: "Отправлено!", err: "Ошибка!", currency: "сум" }
         };
 
         function setLang(l) {
@@ -200,17 +217,19 @@
             const box = document.getElementById('menu-list');
             box.innerHTML = '';
             let items = activeCat === 'all' ? data : data.filter(i => i.cat === activeCat);
+            const t = tr[lang];
 
             items.forEach(i => {
                 let name = i.names[lang] || i.names.uz;
+                let desc = i.descs[lang] || i.descs.uz;
                 let div = document.createElement('div');
                 div.className = "bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15 flex items-center gap-3.5 shadow-md";
                 div.innerHTML = `
                     <img src="${i.img}" class="w-16 h-16 rounded-xl object-cover shrink-0">
                     <div class="flex-1 min-w-0">
                         <h3 class="font-bold text-white text-sm truncate">${name}</h3>
-                        <p class="text-[11px] text-zinc-400 truncate">${i.desc}</p>
-                        <p class="text-amber-400 font-bold text-xs mt-1">${i.price.toLocaleString()} so'm</p>
+                        <p class="text-[11px] text-zinc-400 truncate">${desc}</p>
+                        <p class="text-amber-400 font-bold text-xs mt-1">${i.price.toLocaleString()} ${t.currency}</p>
                     </div>
                     <button onclick="add('${i.id}')" class="bg-amber-500 text-zinc-950 font-bold w-9 h-9 rounded-xl flex items-center justify-center text-lg active:scale-90 transition">+</button>
                 `;
@@ -266,6 +285,7 @@
             let container = document.getElementById('cart-items');
             container.innerHTML = '';
             let total = 0, has = false;
+            const t = tr[lang];
 
             for (let id in cart) {
                 has = true;
@@ -280,17 +300,17 @@
                 row.innerHTML = `
                     <span class="font-medium text-white">${name}</span>
                     <div class="flex items-center gap-2">
-                        <span class="text-amber-400 font-bold">${qty}x (${sum.toLocaleString()} so'm)</span>
+                        <span class="text-amber-400 font-bold">${qty}x (${sum.toLocaleString()} ${t.currency})</span>
                         <div class="flex bg-zinc-800 rounded-lg overflow-hidden border border-white/10">
                             <button onclick="change('${id}', -1)" class="px-2 py-0.5 text-zinc-300 font-bold">-</button>
-                            <button onclick="change('${id}', 1)" class="px-2 py-0.5 text-zinc-300 font-bold">+</button>
+                            <button onclick="change('${id}', 1)" class="px-2.5 py-0.5 text-zinc-300 font-bold">+</button>
                         </div>
                     </div>
                 `;
                 container.appendChild(row);
             }
 
-            document.getElementById('cart-total').innerText = total.toLocaleString() + " so'm";
+            document.getElementById('cart-total').innerText = total.toLocaleString() + " " + t.currency;
             if (has) box.classList.remove('translate-y-full');
             else box.classList.add('translate-y-full');
         }
