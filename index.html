@@ -19,7 +19,7 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body id="main-body" class="text-white antialiased min-h-screen pb-32 transition-all duration-300">
+<body class="text-white antialiased min-h-screen">
 
     <!-- Sarlavha -->
     <header class="bg-zinc-900/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-40 px-3 py-3 shadow-lg">
@@ -77,6 +77,9 @@
 
         <!-- Taomlar -->
         <div id="menu-list" class="space-y-3.5"></div>
+
+        <!-- Pastki savatcha oxirgi taomni yopib qo'ymasligi uchun kafolatlangan bo'sh joy -->
+        <div class="h-72 w-full"></div>
     </main>
 
     <!-- Stol oynasi (Modal) -->
@@ -281,7 +284,6 @@
         }
 
         function updateCart() {
-            let body = document.getElementById('main-body');
             let box = document.getElementById('cart-box');
             let container = document.getElementById('cart-items');
             container.innerHTML = '';
@@ -314,10 +316,8 @@
             document.getElementById('cart-total').innerText = total.toLocaleString() + " " + t.currency;
             if (has) {
                 box.classList.remove('translate-y-full');
-                body.style.paddingBottom = (box.offsetHeight + 24) + "px";
             } else {
                 box.classList.add('translate-y-full');
-                body.style.paddingBottom = "32px";
             }
         }
 
